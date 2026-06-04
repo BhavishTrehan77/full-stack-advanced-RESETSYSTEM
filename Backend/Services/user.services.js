@@ -36,8 +36,8 @@ const Login=async(email,password)=>{
              message:"password diddnt match"
         })
     }
-    const AccessToken=jwt.sign({id:user._id,role:user.role},"accsecretkey",{expiresIn:"15s"})
-    const RefreshToken=jwt.sign({id:user._id,role:user.role},"refsecretkey",{expiresIn:"3d"})
+    const AccessToken=jwt.sign({id:user._id,role:user.role},process.env.ACC_KEY,{expiresIn:"15s"})
+    const RefreshToken=jwt.sign({id:user._id,role:user.role},process.env.SEC_KEY,{expiresIn:"3d"})
 
     return {
         user,RefreshToken,AccessToken
@@ -54,7 +54,7 @@ const Forgot=async(email)=>{
     const resetLink=`http://localhost:5173/reset-password/${resetToken}`
     const hashedToken=crypto.createHash('sha256').update(resetToken).digest('hex')
     await Transporter.sendMail({
-       from:"bhavish.trehan.s.135@kalvium.community",
+       from:process.env.MAIL,
        to:user.email,
        text:`you should reset your password by clicking on this link ${resetLink}`
 

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express=require('express')
 const mongoose=require('mongoose')
 const router = require('./Routes/user.routes')
@@ -20,11 +21,11 @@ const validation=[
     })
 ]
 async function connectdb(){
-    await mongoose.connect("mongodb://localhost:27017/mountain")
+    await mongoose.connect(process.env.MONGO_URI)
     console.log("connection is done")
 }
 connectdb()
 
 app.use("/api/v1/data",validation,router)
 
-app.listen(3000)
+app.listen(process.env.PORT)

@@ -10,7 +10,7 @@ const Auth=async(req,resp,next)=>{
                 message:"token not found"
             })
         }
-        const decoded=jwt.verify(token,"accsecretkey")
+        const decoded=jwt.verify(token,process.env.ACC_KEY)
         req.user=decoded
         return next()
     }
