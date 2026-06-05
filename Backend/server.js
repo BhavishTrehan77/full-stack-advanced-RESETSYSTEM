@@ -27,5 +27,6 @@ async function connectdb(){
 connectdb()
 
 app.use("/api/v1/data",validation,router)
-
+console.log("MAIL =", process.env.MAIL);
+console.log("PASSI =", process.env.PASSI);
 app.listen(process.env.PORT)
