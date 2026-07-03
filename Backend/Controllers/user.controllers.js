@@ -61,6 +61,7 @@ const resetPassword=async(req,resp)=>{
     const data=await ServiceData.reset(req)
     resp.json(data)
 }
+
 module.exports={
     Getdata,
     Postdata,

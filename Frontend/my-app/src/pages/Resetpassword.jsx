@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
 function ResetPassword() {
@@ -7,52 +7,64 @@ function ResetPassword() {
 
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
 
     try {
       setLoading(true);
 
       const res = await axios.post(
         `http://localhost:3000/api/v1/data/reset/${token}`,
-        {
-          newPassword,
-        }
+        { newPassword }
       );
 
-      alert(res.data.message);
+      setMessage(res.data?.message || "Password reset successful 🎉");
+      setNewPassword("");
     } catch (err) {
-      alert(
-        err.response?.data?.message ||
-          "Something went wrong"
-      );
+      setError(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Reset Password</h2>
+    <div className="app-shell">
+      <div className="auth-card">
+        <div className="auth-badge">🔑 Reset Access</div>
+        <h1 className="auth-title">Set a new password</h1>
+        <p className="auth-subtitle">
+          Choose a strong password for your account. Make sure it’s easy for you
+          to remember but hard for others to guess.
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="Enter New Password"
-          value={newPassword}
-          onChange={(e) =>
-            setNewPassword(e.target.value)
-          }
-        />
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="field">
+            <label>New Password</label>
+            <input
+              type="password"
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
 
-        <br />
-        <br />
+          <button className="auth-btn" type="submit" disabled={loading}>
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+        </form>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Resetting..." : "Reset Password"}
-        </button>
-      </form>
+        {message && <div className="status-msg status-success">{message}</div>}
+        {error && <div className="status-msg status-error">{error}</div>}
+
+        <div className="auth-footer">
+          Back to <Link to="/login">Login</Link>
+        </div>
+      </div>
     </div>
   );
 }
